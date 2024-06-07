@@ -3,23 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assests/cs/assets.css">
+    <script type="module" src="assests/js/firebase.js"></script>
+    <script type="module" src="./assests/js/promesas.js"></script>
     <title>Iniciar Sesión - Aventura Relativística</title>
 </head>
 <body>
+    <div class="centrado">
 
     <h1>Iniciar Sesión</h1>
 
-    <form>
-        <label>Usuario:</label><br>
-        <input type="text" required><br><br>
+    <form id="loginForm">
+        <label>APODO:</label><br>
+        <input type="text" id="apodoInput" required><br><br>
 
         <label>Contraseña:</label><br>
-        <input type="Uconstraseña" required><br><br>
+        <input type="password" id="contrasenaInput" required><br><br>
 
         <button type="submit">Iniciar Sesión</button>
     </form>
-
+    
     <p>¿Aún no tienes una cuenta? <a href="registro.html">Regístrate aquí</a>.</p>
 
     <footer>
-        <p>&copy; 2024 Aventura Relativística. Todos los
+        <p>&copy; 2024 Aventura Relativística. Todos los derechos reservados
+                    :D intene validar, intente.</p>
+    </footer>
+    
+    <!-- Incluye la carga del archivo firebase.js -->
+    <script type="module">
+        import { obtenerusuarios } from './assests/js/promesas.js';
+        
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Evitar que el formulario se envíe automáticamente
+
+            const apodo = document.getElementById('apodoInput').value;
+            const contrasena = document.getElementById('contrasenaInput').value;
+
+            try {
+                // Obtener los usuarios de la base de datos
+                const usuarios = await obtenerusuarios(); 
+
+                // Verificar si el apellido coincide con algún usuario registrado
+                const usuarioEncontrado = usuarios.find(usuario => usuario.apellido === apodo);
+
+                if (usuarioEncontrado) {
+                    // Verificar si la contraseña es correcta
+                    if (usuarioEncontrado.contrasena === contrasena) {
+                        // Redirigir al usuario a la página de inicio si las credenciales son correctas
+                        window.location.href = 'pagina.html';
+                    } else {
+                        alert('Contraseña incorrecta, pennnka sin ofender');
+                    }
+                } else {
+                    alert('Apodo no encontrado, probablemente no estes registrado :D');
+                }
+            } catch (error) {
+                console.error('Error al iniciar sesión DIOS ME AYUDE :', error);
+                alert('SI SALTO ESTE ERROR NO TENGO IDEA :D.');
+            }
+        });
+    </script>
+    
+    </div>
+</body>
+</html>

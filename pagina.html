@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assests/cs/assets.css">
+    <title>Aventura Relativística - Página Principal</title>
+</head>
+<body>
+    <div class="centrado">
+        <h1>Bienvenido al Viaje Relativístico</h1>
+        <p>¡Hola Usuario! Bienvenido de nuevo. Explora los misterios del universo y disfruta de nuestra aventura.</p>
+
+        <h2>Explora los Agujeros Negros</h2>
+        <p>Descubre los fenómenos más asombrosos del universo.</p>
+
+        <h2>Principios de la Relatividad</h2>
+        <p>Esta web se dedica a hablar de los principios básicos de la Relatividad. ¡Anímate a aprender más!</p>
+
+        <h2>¡Únete a la Aventura!</h2>
+        <p>¡Regístrate ahora para acceder a contenido exclusivo y modificar tu experiencia de usuario!</p>
+
+        <button><a href="sesion.html">Cerrar Sesión</a></button>
+
+        <h2>Datos del Usuario</h2>
+        <table id="tablaUsuarios">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Rut</th>
+                    <th>Correo</th>
+                    <th>Edad</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Creencia</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyUsuarios">
+              
+            </tbody>
+        </table>
+
+      
+        <div id="editarModal" style="display:none;">
+            <form id="editarForm">
+                <label>Nombre:</label>
+                <input type="text" id="nombreInput" required><br>
+                <label>Apodo:</label>
+                <input type="text" id="apellidoInput" required><br>
+                <label> Correo:</label>
+                <input type="text"  id="correoInput"    required><br>
+                
+                <button type="submit">Guardar Cambios</button>
+                <button type="button" onclick="document.getElementById('editarModal').style.display='none'">Cancelar</button>
+            </form>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Aventura Relativística. Todos los derechos reservados
+                probablemente lea esto profe no me funcaba por una U EN MAYUSCULA QUE HORROR :D 
+                TENER QUE REVISAR TODO.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="assests/js/firebase.js"></script>
+    <script type="module" src="assests/js/promesas.js"></script>
+    <script type="module">
+        import { obtenerUsuarioActual, obtenerusuarios, editarUsuario, eliminarUsuario } from './assests/js/promesas.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tbodyUsuarios = document.getElementById('tbodyUsuarios');
+
+            try {
+                // Obtener todos los usuarios de la base de datos
+                const usuarios = await obtenerusuarios();
+
+                // Construir las filas de la tabla con los datos de los usuarios
+                usuarios.forEach(usuario => {
+                    const filaUsuario = document.createElement('tr');
+
+                    filaUsuario.innerHTML = `
+                        <td>${usuario.nombre}</td>
+                        <td>${usuario.apellido}</td>
+                        <td>${usuario.rut}</td>
+                        <td>${usuario.correo}</td>
+                        <td>${usuario.edad}</td>
+                        <td>${usuario.fnacimiento}</td>
+                        <td>${usuario.fgusto}</td>
+                        <td>${usuario.creador ? 'Creador' : 'Lector'}</td>
+                        <td>
+                            <button class="editarUsuario" data-id="${usuario.id}">Editar</button>
+                            <button class="eliminarUsuario" data-id="${usuario.id}">Eliminar</button>
+                        </td>
+                    `;
+
+                    tbodyUsuarios.appendChild(filaUsuario);
+                });
+
+                //  eventos para editar y eliminar usuario
+                document.querySelectorAll('.editarUsuario').forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const usuarioId = event.target.getAttribute('data-id');
+                        const usuario = usuarios.find(u => u.id === usuarioId);
+                        
+                        // Rellenar el formulario con los datos del usuario para editar
+                        if (usuario) {
+                            document.getElementById('nombreInput').value = usuario.nombre;
+                            document.getElementById('apellidoInput').value = usuario.apellido;
+                            document.getElementById('correoInput').value = usuario.correo;
+                            
+                            // Mostrar modal de edición
+                            document.getElementById('editarModal').style.display = 'block';
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.eliminarUsuario').forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const usuarioId = event.target.getAttribute('data-id');
+
+                        // Confirmar eliminación
+                        if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                            await eliminarUsuario(usuarioId);
+                            alert('Usuario eliminado correctamente');
+                            window.location.reload();
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error al obtener los datos del usuario:', error);
+            }
+        });
+
+        document.getElementById('editarForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const usuarioId = document.querySelector('.editarUsuario').getAttribute('data-id');
+            const nombre = document.getElementById('nombreInput').value;
+            const apellido = document.getElementById('apellidoInput').value;
+            const correo = document.getElementById('correoInput').value;
+            
+
+            const datosActualizados = {
+                nombre,
+                apellido,
+                correo,
+                
+            };
+
+            try {
+                await editarUsuario(usuarioId, datosActualizados);
+                alert('Usuario actualizado correctamente');
+                document.getElementById('editarModal').style.display = 'none';
+                window.location.reload();
+            } catch (error) {
+                console.error('Error al actualizar el usuario:', error);
+            }
+        });
+    </script>
+</body>
+</html>

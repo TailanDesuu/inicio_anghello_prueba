@@ -4,23 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <script type="module" src="assests/js/firebase.js"></script>
-    <script type="module" src="assests/js/script.js"></script>
-    <link rel="stylesheet" href="/assests/cs/assets.css">
+      
+    <link rel="stylesheet"  href="assests/cs/assets.css">
 </head>
 <body>
+    <div class="centrado">
 
     <h1>Registrar</h1>
-
-    <input type="text" id="nombre" placeholder="Nombre"><br>
-    <input type="text" id="apellido" placeholder="Apellido"><br>
-    <input type="number" id="rut" placeholder="Rut"><br>
-    <input type="text" id="correo" placeholder="Correo"><br>
-    <input type="text" id="edad" placeholder="Edad"><br>
-    <input type="date" id="fnacimiento" placeholder="Fecha de nacimiento"><br>
-    <input type="text" id="fgusto" placeholder="Creencia"><br>
-    <input type="text" id="fnonimo" placeholder="Creador / Lector" ><br>
-    <button id="btnRegistrar">Registrar</button>
-
+    
+        <form id = "formulario">
+        
+        <input type="text" id="nombre" placeholder="Nombre" required ><br><br><br>
+        <input type="text" id="apellido" placeholder="apodo" required><br><br><br>
+        <input type="password"   id="Contrasena" placeholder="contraseña" required> <br><br><br>
+        <input type="number" id="rut" placeholder="Rut" required><br><br><br>
+        <input type="email" id="correo" placeholder="Correo" required><br><br><br>
+        <input type="text" id="edad" placeholder="Edad" required><br><br><br>
+        <input type="date" id="fnacimiento" placeholder="Fecha de nacimiento"><br><br><br>
+        <textarea type="text" id="fgusto" placeholder="creencia"></textarea><br><br><br>
+        
+        <label > ELIGE UN ROL:</label><br>
+        <label >
+            <input type="checkbox" id="Creador" name="ROL" >
+            Creador
+        </label><br>
+        <label >
+            <input type="checkbox" id="lector" name="ROL" >
+            Lector.
+        </label><br>
+        <button type="submit"id="btnRegistrar">Registrar</button>
+        </form>
+    </div> 
+    <script type="module" src="assests/js/firebase.js"></script>
+    <script type="module" src="assests/js/script.js"></script>    
+     <footer>
+            <p>&copy; 2024 Aventura Relativística. Todos los derechos reservados por mi y unicamente yo :D </p>
+    </footer>  
 </body>
 </html>
